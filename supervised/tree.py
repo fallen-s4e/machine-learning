@@ -244,22 +244,25 @@ def contactLenTree(filename):
     lenseTree = createDecisionTree(lenses, features)
     return lenseTree
 
-# reads orange suitable file, converts and returns decision tree, example:
-# d = tree.orangeAdapter("../dataset/lenses.tab")
-def orangeAdapter(filename):
+def orangeDatasetToDecisionTree(dataset):
     import orange
-    data = orange.ExampleTable(filename)
 
     # features as string
-    featLabels = map(lambda f : f.name,  data.domain.features)
+    featLabels = map(lambda f : f.name,  dataset.domain.features)
 
     # normalizing data to fit createDecisionTree. So the class value always wiil be last
     def f(row):
         r = map(lambda featName : str(row[featName]), featLabels) + [str(row[row.domain.classVar.name])]
         return r
-    normalizedData = map(f, data)
+    normalizedData = map(f, dataset)
 
     return createDecisionTree(normalizedData, featLabels)
+
+# reads orange suitable file, converts and returns decision tree, example:
+# d = tree.orangeAdapter("../dataset/lenses.tab")
+def orangeAdapter(filename):
+    import orange
+    return orangeDatasetToDecisionTree(orange.ExampleTable(filename))
 
 # prints a decision tree to a string, example:
 # print tree.treeToStr(tree.orangeAdapter("../dataset/lenses.tab"))
