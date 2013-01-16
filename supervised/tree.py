@@ -244,3 +244,17 @@ def contactLenTree(filename):
     features = ['age', 'prescript', 'astigmatic', 'tearRate']
     lenseTree = createDecisionTree(lenses, features)
     return lenseTree
+
+def orangeAdapter(filename):
+    import orange
+    data = orange.ExampleTable(filename)
+
+    # features as string
+    featLabels = map(lambda f : f.name,  data.domain.features)
+
+    # normalizing data to fit createDecisionTree. So the class value always wiil be last
+    def f(row):
+        return map(lambda featName : str(row[featName]), featLabels)
+    normalizedData = map(f, data)
+
+    return createDecisionTree(normalizedData, featLabels)
