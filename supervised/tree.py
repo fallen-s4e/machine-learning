@@ -266,7 +266,7 @@ def orangeAdapter(filename):
 
 # prints a decision tree to a string, example:
 # print tree.treeToStr(tree.orangeAdapter("../dataset/lenses.tab"))
-def treeToStr(decisionTree, indent = 0):
+def treeToStr(decisionTree, indent = 0, indentBy = 1):
     def indentToStr(indent): return " "*indent
     # tree is just a class value
     if type(decisionTree) != dict:
@@ -274,7 +274,7 @@ def treeToStr(decisionTree, indent = 0):
     
     # otherwise it is a dict
     def f( (featName, aDict) ):
-        featStr = indentToStr(indent+1) + featName + ":\n"
-        dictStr = treeToStr(aDict, indent+2)
+        featStr = indentToStr(indent+indentBy) + featName + ":\n"
+        dictStr = treeToStr(aDict, indent+(indentBy*2), indentBy)
         return featStr + dictStr
     return ''.join(map(f, decisionTree.items()))
