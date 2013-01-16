@@ -3,7 +3,7 @@ decision tree
 '''
 
 from math import log
-import operator
+import operator, sys
 
 #entropy is about the information of target value.
 def calEntropy(dataSet):
@@ -125,7 +125,6 @@ def createDecisionTree(dataSet, labels):
     #terminate cond2: no more features, apply majorityCount
     if len(dataSet[0]) == 1:
         return majorityCount(classList)
-    
     #bestFeature is the index of featureList
     bestFeature = chooseFeatureToSplit(dataSet)
     bestFeatureLabel = labels[bestFeature]
@@ -245,6 +244,8 @@ def contactLenTree(filename):
     lenseTree = createDecisionTree(lenses, features)
     return lenseTree
 
+# reads orange suitable file, converts and returns decision tree, example:
+# d = tree.orangeAdapter("../dataset/lenses.tab")
 def orangeAdapter(filename):
     import orange
     data = orange.ExampleTable(filename)
@@ -254,7 +255,23 @@ def orangeAdapter(filename):
 
     # normalizing data to fit createDecisionTree. So the class value always wiil be last
     def f(row):
-        return map(lambda featName : str(row[featName]), featLabels)
+        r = map(lambda featName : str(row[featName]), featLabels) + [str(row[row.domain.classVar.name])]
+        return r
     normalizedData = map(f, data)
 
     return createDecisionTree(normalizedData, featLabels)
+
+# prints a decision tree to a string, example:
+# print tree.treeToStr(tree.orangeAdapter("../dataset/lenses.tab"))
+def treeToStr(decisionTree, indent = 0):
+    def indentToStr(indent): return " "*indent
+    # tree is just a class value
+    if type(decisionTree) != dict:
+        return indentToStr(indent) + decisionTree+"\n"
+    
+    # otherwise it is a dict
+    def f( (featName, aDict) ):
+        featStr = indentToStr(indent+1) + featName + ":\n"
+        dictStr = treeToStr(aDict, indent+2)
+        return featStr + dictStr
+    return ''.join(map(f, decisionTree.items()))
