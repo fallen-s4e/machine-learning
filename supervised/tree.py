@@ -291,10 +291,3 @@ def getStats(decisionTree, testingOrangeDataset):
 
 def testOnDataID3(trainingSet, testingSet):
     return getStats(orangeDatasetToDecisionTree(trainingSet), testingSet)
-"""
-import orange
-import tree
-data = orange.ExampleTable("export_data_fin.tab")
-d = tree.orangeDatasetToDecisionTree(data)
-tree.getStats(d, data)
-"""
