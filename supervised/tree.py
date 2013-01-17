@@ -278,3 +278,22 @@ def treeToStr(decisionTree, indent = 0, indentBy = 1):
         dictStr = treeToStr(aDict, indent+(indentBy*2), indentBy)
         return featStr + dictStr
     return ''.join(map(f, decisionTree.items()))
+
+def getStats(decisionTree, testingOrangeDataset):
+    def isGoodClassified(row):
+        fs = map(lambda f: f.name, row.domain.features)
+        vs = map(lambda f: str(row[f]), fs)
+        realValue = str(row[row.domain.classVar])
+        return classify(decisionTree, map(str, fs), vs) == realValue
+    goodClassified = filter(isGoodClassified, testingOrangeDataset)
+    return (len(goodClassified), len(testingOrangeDataset))
+
+def testOnDataID3(trainingSet, testingSet):
+    return getStats(orangeDatasetToDecisionTree(trainingSet), testingSet)
+"""
+import orange
+import tree
+data = orange.ExampleTable("../dataset/lenses.tab")
+d = tree.orangeDatasetToDecisionTree(data)
+tree.getStats(d, data)
+"""
