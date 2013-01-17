@@ -71,7 +71,7 @@ def chooseFeatureToSplit(dataSet):
     numFeatures = len(dataSet[0]) - 1
     baseEntropy = calEntropy(dataSet)
     bestInfoGain = 0.0
-    bestFeature = -1
+    bestFeature = numFeatures-1
     for i in range(numFeatures):
         # get the feature col
         featureCol = [example[i] for example in dataSet]
@@ -107,8 +107,8 @@ def majorityCount(classList):
             classCount[classVal] = 0
         classCount[classVal] += 1
     #sort by the value.
-    sortedClassCount = sorted(classCount.iteritems(), \
-                              key=operator.itermgetter(1), reverse=True)
+    sortedClassCount = sorted(classCount.items(), \
+                              key=operator.itemgetter(1), reverse=True)
     #return the first element's value.
     return sortedClassCount[0][0]
 
@@ -147,8 +147,9 @@ def createDecisionTree(dataSet, labels):
         subLabels.extend(labels[bestFeature+1:])
         #iterate all unique values from chosen feature and recursively
         #call createDecisionTree() for each split of dataset.
-        decisionTree[bestFeatureLabel][value] = createDecisionTree(\
+        dt = createDecisionTree(\
             splitDataSet(dataSet, bestFeature, value), subLabels)
+        decisionTree[bestFeatureLabel][value] = dt
     
     return decisionTree
 
@@ -293,7 +294,7 @@ def testOnDataID3(trainingSet, testingSet):
 """
 import orange
 import tree
-data = orange.ExampleTable("../dataset/lenses.tab")
+data = orange.ExampleTable("export_data_fin.tab")
 d = tree.orangeDatasetToDecisionTree(data)
 tree.getStats(d, data)
 """
