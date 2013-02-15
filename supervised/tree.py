@@ -211,6 +211,8 @@ Given decision tree and featureLabels, take the unknown data to compare it
 against the values in the decision tree recursively until it hits a leaf node.
 '''
 def classify(decisionTree, featureList, testVec):
+    if not(isinstance(decisionTree, dict)):
+        return descisionTree
     firstFeature = decisionTree.keys()[0]
     featureIndex = featureList.index(firstFeature)
     secondDict = decisionTree[firstFeature]
